@@ -1,7 +1,7 @@
 # Proyecto 1 — Know Your Target
 
 ## Autor
-[Tu nombre o identificador académico]
+Luis Miguel Gomila Dominguez
 
 ## Objetivo
 Anthropic
