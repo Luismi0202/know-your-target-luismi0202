@@ -299,6 +299,8 @@ En este cuaderno anoto qué consulté, qué devolvió cada fuente y qué utilida
 - **Interpretación:** ExifTool mostró datos técnicos del único PDF localizado, como el formato, el número de páginas, el programa con que se generó y sus fechas. No apareció un campo de autor. El archivo está alojado en `assets.claude.ai`, fuera de la lista permitida, así que esta prueba no cuenta como trabajo dentro del alcance.
 - **Limitación:** Este fue el único resultado localizado. No apareció ningún PDF servido desde los hostnames exactos de `scope.txt`. El archivo encontrado está en un hostname fuera de alcance, por lo que esta prueba no se presenta como reconocimiento autorizado ni como técnica opcional completada.
 - **Siguiente paso:** ExifTool queda pendiente dentro del alcance. Este resultado no amplía `scope.txt` ni justifica nuevas consultas a `assets.claude.ai`.
+
+**EN LA CAPTURA PONGO LO DE DENTRO DE SCOPE PORQUE LA BÚSQUEDA SI LO ESTÁ PERO LO OTRO AL ESTAR DENTRO DE ASSETS.CLAUDE.AI YA NO LO ESTÁ**
 ![Salida de ExifTool, captura 1](IMGS/exftools1.png)
 ![Salida de ExifTool, captura 2](IMGS/exftools2.png)
 
