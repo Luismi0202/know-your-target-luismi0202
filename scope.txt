@@ -1,3 +1,6 @@
+# scope.txt · programa: Anthropic Bug Bounty (HackerOne) · consultado: 2026-10-28
+# Allowlist estricta de los hostnames identificados en el alcance consultado.
+# No se usa un comodin: los subdominios no enumerados no quedan autorizados por esta lista.
 claude.ai
 api.anthropic.com
 api-staging.anthropic.com
@@ -5,3 +8,10 @@ console.anthropic.com
 docs.anthropic.com
 support.anthropic.com
 anthropic.atlassian.com
+# Fuera de alcance para el agente: nombres descubiertos que no estan en la allowlist positiva.
+!anthropic.com
+!status.anthropic.com
+!www.anthropic.com
+!www-cdn.anthropic.com
+!claude.anthropic.com
+!a.anthropic.com

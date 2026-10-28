@@ -16,7 +16,7 @@ https://hackerone.com/anthropic
 2026-10-28
 
 ## Alcance
-Se preparó una lista inicial de siete hosts identificados en la información del programa:
+Se preparó una allowlist de siete hostnames concretos identificados en la información del programa:
 
 - `claude.ai`
 - `api.anthropic.com`
@@ -26,12 +26,18 @@ Se preparó una lista inicial de siete hosts identificados en la información de
 - `support.anthropic.com`
 - `anthropic.atlassian.com`
 
-La lista se encuentra en `scope.txt`. Los hosts se registraron como candidatos para el inventario inicial; su inclusión en esta lista no implica autorización general para realizar pruebas. Antes de cualquier actividad adicional se debe comprobar el alcance y las restricciones vigentes del programa.
+La lista se encuentra en `scope.txt` y es la misma que se debe usar en la Parte 2 con `aap-base`. No contiene comodines: que un subdominio aparezca en certificados, Shodan o Google no lo añade al alcance. La inclusión de un hostname tampoco permite saltarse las restricciones de la práctica o del programa.
 
 Se identificó `https://github.com/modelcontextprotocol` como excluido según la información del programa consultada. Los servicios de terceros no se consideran automáticamente dentro del alcance. Las pruebas de seguridad de modelos, como jailbreaks, se encuentran fuera del programa de infraestructura descrito.
 
+Durante el reconocimiento se usó `anthropic.com` como consulta en varias fuentes y se consultaron sus archivos públicos `robots.txt` y `security.txt`. Ese dominio no figura en `scope.txt`; estas observaciones se identifican como fuentes consultadas, no como permiso para probarlo. Para repetir el trabajo con el agente, no se debe añadir sin comprobar antes la política vigente.
+
+## Comprobación prevista del scope-guard
+
+El `scope-guard` ya viene implementado en `aap-base`; este proyecto no lo programa. Al ejecutar el agente, se debe comprobar que permite un hostname exacto como `api.anthropic.com` y rechaza `status.anthropic.com`, `anthropic.com` y `anthropic.com.evil.net`. También se debe comprobar que `anthropic.atlassian.com` no da permiso para otros hosts de Atlassian. La política y los resultados de esas pruebas se deben conservar en la traza del agente. La ejecución aún está pendiente.
+
 ## Metodología
-Se realizó reconocimiento pasivo mediante fuentes públicas y consultas de lectura, sin intentar explotar vulnerabilidades ni acceder a datos privados.
+Se realizó reconocimiento de fuentes públicas sin escanear puertos ni probar vulnerabilidades, sin intentar acceder a datos privados y sin contactar con personas. Algunas consultas DNS y peticiones GET a archivos públicos generan tráfico; por eso "pasivo" describe aquí el tipo de actividad, no que no se envíe ningún paquete.
 
 Técnicas utilizadas:
 
@@ -42,14 +48,14 @@ Técnicas utilizadas:
 5. **Ficheros públicos:** consulta de `robots.txt` y `security.txt`.
 6. **Servicios expuestos en fuentes públicas:** consulta de Shodan InternetDB para la IP `160.79.104.10`, sin escanear puertos.
 7. **Google dorks:** búsqueda de documentos PDF indexados mediante `site:anthropic.com filetype:pdf`.
-8. **Correos y metadatos públicos:** ejecución de `theHarvester` usando la fuente `crtsh`.
+8. **Correos y metadatos públicos:** ejecución de `theHarvester` usando la fuente `crtsh`. Esta fuente se basa en certificados y no es especializada en correos, por lo que la ausencia de resultados no demuestra que no existan direcciones públicas.
 
 No se realizaron escaneos activos, fuerza bruta, explotación, ingeniería social ni intentos de acceso a información privada. No se crearon cuentas en los sistemas de la organización.
 
 ## Documentos
 - `alcance.md`: reglas, restricciones y alcance normalizado.
-- `scope.txt`: lista inicial de siete hosts para el inventario.
-- `cuaderno.md`: registro de comandos, fuentes, resultados y observaciones.
+- `scope.txt`: allowlist exacta de siete hostnames, sin comodines.
+- `cuaderno.md`: registro de fechas, objetivos, acciones, resultados, siguientes pasos y una explicación sencilla de para qué sirvió cada consulta.
 - `mapa.md`: resumen de la superficie de ataque observada mediante fuentes públicas.
 - `comparativa.md`: comparación con el agente de IA, pendiente de completar cuando se disponga de sus resultados.
 
@@ -104,4 +110,4 @@ Se completó una primera pasada por las ocho técnicas obligatorias de reconocim
 
 Hasta este punto no se ha confirmado ninguna vulnerabilidad. Los datos obtenidos sirven como inventario preliminar y deben contrastarse con el alcance vigente antes de considerar cualquier prueba adicional.
 
-La comparación con el agente de IA queda pendiente hasta disponer de sus resultados. Las diferencias deberán registrarse en `comparativa.md`, indicando la fuente y evitando considerar un hallazgo confirmado sin evidencia reproducible.
+La ejecución de `aap-base`, las pruebas del `scope-guard` y la comparación con el agente de IA quedan pendientes. Cuando se realicen, las diferencias deberán registrarse en `comparativa.md`, indicando la fuente y evitando considerar un hallazgo confirmado sin evidencia reproducible.

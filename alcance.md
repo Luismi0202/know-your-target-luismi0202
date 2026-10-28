@@ -12,7 +12,9 @@
 
 ## 2. Objetivo
 
-Realizar reconocimiento pasivo de los activos autorizados de Anthropic para identificar y documentar información pública sobre sus dominios, infraestructura y tecnologías, sin explotar vulnerabilidades ni afectar los sistemas.
+Realizar el inventario previo a una auditoría mediante las ocho técnicas de reconocimiento indicadas en el enunciado, documentando fuentes, resultados y limitaciones. Para la Parte 2 se usará la misma lista de activos en `scope.txt` como allowlist del `scope-guard`.
+
+En esta práctica, "pasivo" significa que no se escanean puertos, no se ejecutan pruebas de vulnerabilidades, no se fuerza acceso ni se interactúa con empleados. Algunas consultas de información pública sí generan tráfico (por ejemplo, consultas DNS o peticiones GET a archivos públicos); se anotan como tales y no se confunden con una ausencia total de paquetes.
 
 ## 3. Activos incluidos
 
@@ -28,6 +30,8 @@ Según el CSV descargado de HackerOne, los activos relevantes para el reconocimi
 El activo API & SDKs también menciona expresamente api-staging.anthropic.com como hostname de staging. Se documentará por separado, respetando las instrucciones específicas del programa.
 
 El programa incluye además otras categorías, como clientes oficiales, Claude Code, repositorios y servicios internos. No se tratarán como dominios sin comprobar primero su naturaleza y sus instrucciones específicas.
+
+La allowlist incluye exactamente los siete nombres enumerados en `scope.txt`, sin comodines. Esto evita interpretar que cualquier subdominio relacionado queda permitido. `anthropic.com` y nombres descubiertos como `status.anthropic.com` no se añadieron porque no están confirmados en la lista de activos recogida aquí. Consultar una fuente pública que los menciona no cambia esa decisión.
 
 ## 4. Exclusiones y limitaciones
 
@@ -57,12 +61,32 @@ La política solicita informes detallados y reproducibles. Prohíbe causar daño
 
 Las pruebas deben mantenerse dentro de las condiciones del programa y de la legislación aplicable. La etiqueta «Open Scope» no sustituye la revisión de las instrucciones de cada activo.
 
+En las notas consultadas para este trabajo no quedó registrado un límite numérico de peticiones, una autorización explícita para escaneo automatizado ni un requisito concreto de identificación del investigador. No se debe interpretar esa falta de anotación como permiso: la práctica no hará escaneos, y antes de cualquier actividad posterior habría que volver a comprobar la política y las instrucciones específicas. Esta práctica no contactará con empleados ni creará cuentas.
+
 ## 7. Registro de fuentes
 
 - Programa: https://hackerone.com/anthropic
 - Política y directrices del programa: sección Program guidelines de HackerOne.
 - Alcance de activos: sección Scope y CSV descargado el 28/10/2026.
 
-## 8. Estado
+## 8. Uso de `scope.txt` y comprobación del scope-guard
 
-Alcance inicial documentado. Pendiente de completar el inventario de activos y registrar los resultados del reconocimiento pasivo en cuaderno.md y mapa.md.
+`scope.txt` contiene una línea por hostname permitido, sin comodines ni rangos IP. Se usará el mismo archivo en las dos partes del proyecto. La inclusión de un nombre solo lo incorpora a la allowlist del agente; no autoriza técnicas prohibidas por la práctica ni prevalece sobre las condiciones del programa.
+
+Al probar el `scope-guard` de `aap-base`, los casos esperados para esta lista son:
+
+| Objetivo de prueba | Resultado esperado | Motivo |
+|---|---|---|
+| `api.anthropic.com` | Dentro | Coincidencia exacta con una línea de `scope.txt`. |
+| `https://API.anthropic.com/login` | Dentro, si el guard normaliza mayúsculas y extrae el hostname de la URL | Es el mismo hostname autorizado, aunque tenga esquema, ruta y mayúsculas. |
+| `status.anthropic.com` | Fuera | Se encontró en fuentes públicas, pero no está en la allowlist. |
+| `anthropic.com` | Fuera | El dominio raíz no está enumerado. |
+| `anthropic.com.evil.net` | Fuera | No coincide con ningún hostname autorizado; compartir texto no basta. |
+| `anthropic.atlassian.com` | Dentro | Solo está incluido ese hostname exacto, no todo Atlassian. |
+| `10.10.0.7` | Fuera | No se incluyeron direcciones IP ni rangos. |
+
+La comprobación debe hacerse contra el `scope-guard` ya proporcionado por `aap-base`; no se programa otro guard. Se deben guardar en la traza los objetivos probados y el resultado permitido/rechazado. En este repositorio solo se documenta la lista; la ejecución del agente y esas pruebas quedan pendientes.
+
+## 9. Estado
+
+El alcance está normalizado en `scope.txt` y se ha documentado el reconocimiento manual en `cuaderno.md` y `mapa.md`. Queda pendiente ejecutar `aap-base` con esta misma lista, comprobar los casos del scope-guard y completar la comparativa con resultados reales del agente.
