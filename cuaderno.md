@@ -33,6 +33,9 @@
 - **Limitación:** El comando whois desde Kali devolvió Network is unreachable; se utilizó ICANN Lookup como alternativa web.
 - **Siguiente paso:** Consultar los registros DNS públicos.
 
+![WHOIS desde Kali: conexión no disponible](IMGS/whois_nofuncional.png)
+![Consulta de claude.ai en ICANN Lookup](IMGS/whois_enicann_funcional.png)
+
 ## Registro 3 — DNS A de claude.ai
 
 - **Fecha:** 28/10/2026
@@ -47,6 +50,8 @@
 - **Limitación:** Una única consulta no permite afirmar que sea la única dirección IP asociada al dominio.
 - **Siguiente paso:** Consultar el registro MX para comprobar si el dominio publica información de servidores de correo.
 
+![Consulta DNS A de claude.ai](IMGS/dig.png)
+
 ## Registro 4 — DNS MX de claude.ai
 
 - **Fecha:** 28/10/2026
@@ -60,6 +65,8 @@
 - **Interpretación:** La consulta no devolvió registros MX para claude.ai en el momento de la observación.
 - **Limitación:** Este resultado no permite concluir que Anthropic carezca de servicios de correo.
 - **Siguiente paso:** Consultar el registro TXT público del dominio.
+
+![Consulta DNS MX de claude.ai](IMGS/dig_mx.png)
 
 ## Registro 5 — DNS TXT de claude.ai
 
@@ -76,6 +83,8 @@
 - **Limitación:** No se ha verificado el propósito de la cadena adicional ni se han probado los mecanismos de verificación.
 - **Siguiente paso:** Consultar los registros CAA públicos del dominio.
 
+![Consulta DNS TXT de claude.ai](IMGS/dig_txt.png)
+
 ## Registro 6 — DNS CAA de claude.ai
 
 - **Fecha:** 28/10/2026
@@ -91,6 +100,8 @@
 - **Limitación:** La consulta no verifica certificados emitidos ni demuestra vulnerabilidades.
 - **Siguiente paso:** Consultar los registros AAAA públicos del dominio.
 
+![Consulta DNS CAA de claude.ai](IMGS/dig_caa.png)
+
 ## Registro 7 — DNS AAAA de claude.ai
 
 - **Fecha:** 28/10/2026
@@ -104,6 +115,8 @@
 - **Interpretación:** El dominio publicó una dirección IPv6 en el momento de la consulta. También se había observado una dirección IPv4 en la consulta A.
 - **Limitación:** Los resultados corresponden a una observación puntual y pueden cambiar.
 - **Siguiente paso:** Revisar los registros NS del dominio.
+
+![Consulta DNS AAAA de claude.ai](IMGS/dig_AAAA.png)
 
 ## Registro 8 — DNS NS de claude.ai
 
@@ -120,6 +133,8 @@
 - **Limitación:** La consulta identifica servidores DNS, pero no demuestra la existencia ni ausencia de vulnerabilidades.
 - **Siguiente paso:** Consultar el registro SOA del dominio.
 
+![Consulta DNS NS de claude.ai](IMGS/dig_NS.png)
+
 ## Registro 9 — Descubrimiento pasivo de subdominios
 
 - **Fecha:** 28/10/2026
@@ -132,6 +147,8 @@
 - **Interpretación:** Los certificados públicos permiten identificar nombres asociados a la infraestructura y servicios de Anthropic.
 - **Limitación:** Los resultados no confirman que todos los nombres estén activos ni que pertenezcan al alcance autorizado. Se contrastarán con scope.txt y la política del programa.
 - **Siguiente paso:** Revisar la huella tecnológica con Netcraft.
+
+![Subdominios obtenidos mediante crt.sh](IMGS/curl.png)
 
 ## Registro 10 — Huella tecnológica con Netcraft
 
@@ -148,6 +165,8 @@
 - **Limitación:** Son detecciones de terceros y pueden ser incompletas o variar con el tiempo. El informe consultado indica que la página HTTP no es HTTPS; no se ha comprobado aquí el informe HTTPS ni se han realizado pruebas activas.
 - **Siguiente paso:** Revisar robots.txt y security.txt de forma pasiva.
 
+![Informe de Netcraft para anthropic.com](IMGS/netcraft.png)
+
 ## Registro 11 — Consulta de robots.txt
 
 - **Fecha:** 28/10/2026
@@ -159,6 +178,8 @@
 - **Limitación:** robots.txt no es un mecanismo de control de acceso ni confirma que no existan otras rutas.
 - **Siguiente paso:** Consultar security.txt en la ubicación estándar.
 
+![Contenido de robots.txt](<IMGS/curl robots.png>)
+
 ## Registro 12 — Consulta de security.txt
 
 - **Fecha:** 28/10/2026
@@ -169,6 +190,8 @@
 - **Interpretación:** Anthropic publica un canal para reportar vulnerabilidades y una política asociada.
 - **Limitación:** La presencia de estos enlaces no implica que se haya enviado un informe ni que se haya validado ninguna vulnerabilidad.
 - **Siguiente paso:** Consultar información pública de servicios mediante Shodan InternetDB, sin escanear el objetivo.
+
+![Contenido de security.txt](IMGS/curl_security.png)
 
 ## Registro 13 — Shodan InternetDB
 
@@ -182,6 +205,8 @@
 - **Limitación:** Los datos de InternetDB pueden estar incompletos o desactualizados. No se realizaron conexiones a los puertos ni pruebas de vulnerabilidad.
 - **Siguiente paso:** Realizar búsquedas públicas mediante Google dorks.
 
+![Consulta de la IP en Shodan InternetDB](<IMGS/curl shodan.png>)
+
 ## Registro 14 — Google dorks: documentos PDF
 
 - **Fecha:** 28/10/2026
@@ -192,6 +217,8 @@
 - **Interpretación:** Los motores de búsqueda permiten identificar documentos publicados bajo dominios asociados a Anthropic.
 - **Limitación:** La indexación pública no demuestra una exposición indebida. No se descargaron ni analizaron documentos potencialmente sensibles.
 - **Siguiente paso:** Buscar información de contacto corporativa mediante fuentes públicas.
+
+![Resultados de Google dorks para PDF de anthropic.com](IMGS/googledorks_anthro_pdf.png)
 
 ## Registro 15 — Búsqueda pasiva de correos con theHarvester
 
@@ -206,3 +233,4 @@
 - **Limitación:** La ausencia de resultados no demuestra que no existan correos o hosts públicos.
 - **Siguiente paso:** Revisar que los resultados estén reflejados en el mapa de reconocimiento.
 
+![Ejecución de theHarvester para anthropic.com](IMGS/correos_theharvester_publicos.png)
