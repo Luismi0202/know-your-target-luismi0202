@@ -37,6 +37,10 @@ La columna "En alcance" indica si el hostname aparece literalmente en `scope.txt
 
 La captura del registro 9 muestra más resultados de crt.sh que los ejemplos transcritos en el cuaderno. Por eso esta tabla clasifica todos los nombres que quedaron anotados en los documentos, pero no afirma ser el listado exhaustivo devuelto por crt.sh. Para entregar un inventario completo, hay que conservar y revisar la salida íntegra, deduplicar los nombres y marcar cada uno contra `scope.txt`.
 
+### Contraste de datos entre fuentes
+
+ICANN Lookup y `dig` coincidieron en los nameservers de `claude.ai`; además, la IP obtenida con `dig` fue la misma consultada después en Shodan InternetDB. Netcraft reportó esas mismas direcciones en un informe para `anthropic.com`, no para `claude.ai`, por lo que la coincidencia es orientativa y no confirma que ambos dominios compartan la misma configuración. (Cuaderno, registros 2, 3, 7, 8, 10 y 13.)
+
 ## 3. Infraestructura y servicios
 
 ### DNS y registro

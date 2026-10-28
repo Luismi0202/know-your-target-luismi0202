@@ -59,6 +59,22 @@ No se realizaron escaneos activos, fuerza bruta, explotación, ingeniería socia
 - `mapa.md`: resumen de la superficie de ataque observada mediante fuentes públicas.
 - `comparativa.md`: comparación con el agente de IA, pendiente de completar cuando se disponga de sus resultados.
 
+## Estado frente a la rúbrica
+
+Este estado resume lo que está documentado en el repositorio; no sustituye una calificación ni presenta como ejecutadas tareas que siguen pendientes.
+
+| Apartado | Evidencia actual | Pendiente para aspirar al nivel excelente |
+|---|---|---|
+| Alcance (P1) | Programa, activos, restricciones y una allowlist exacta están descritos en `alcance.md` y `scope.txt`. | Confirmar en la política vigente si el programa declara algún comodín. No añadirlo por cumplir la rúbrica si amplía el permiso; conservar exclusiones justificadas y documentar las reglas de automatización, límites y requisitos con evidencia de la política. |
+| Reconocimiento pasivo (P1) | El cuaderno registra las ocho técnicas obligatorias e incluye una sección de contraste entre fuentes. | Conservar la salida íntegra de crt.sh para completar la lista de nombres; registrar una técnica opcional si se realiza y solo después de comprobar que es apropiada y permitida. |
+| Mapa (P1) | El mapa contiene resumen, tabla de hosts, infraestructura, correo/personas y tres prioridades con referencias a registros. | Completar el inventario a partir de evidencia íntegra y mantener la trazabilidad de cada dato al cuaderno. |
+| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla; también guardan comandos y fuentes cuando constan. | La hora de los registros 9-15 no quedó en la evidencia original; las entradas lo indican en vez de inventar una hora. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
+| Scope-guard (P2) | `alcance.md` enumera resultados esperados para casos positivos y negativos, inspirados en la batería del enunciado. | Ejecutar la batería de `aap-base`, comprobar que todas las herramientas pasan por el guard y adjuntar la traza real de permitidos y bloqueados. |
+| Agente (P2) | El README describe los límites esperados, pero este repositorio no contiene la ejecución de `aap-base`. | Añadir y ejecutar al menos dos herramientas seguras, instrucciones que exijan fuente para cada dato y guardar traza, informe y coste real. |
+| Comparativa (P3) | No hay resultados del agente para comparar todavía. | Crear `comparativa.md` después de la ejecución: contrastar manual y agente con ejemplos de la traza, clasificar aciertos, omisiones, errores e invenciones y razonar el impacto de cada diferencia. |
+
+El enunciado y la rúbrica no justifican ampliar el alcance con `*.anthropic.com` sin evidencia de que ese comodín esté autorizado por el programa. Si la política publica un wildcard, se puede reflejar exactamente en `scope.txt` y mantener las exclusiones aplicables; si no, se conserva la allowlist concreta.
+
 ## Resultados
 
 ### 1. Registro de dominio

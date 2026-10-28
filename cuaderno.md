@@ -179,6 +179,7 @@ Los registros NS dicen qué servidores responden por el DNS del dominio. La cons
 ## Registro 9 — Descubrimiento pasivo de subdominios
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** anthropic.com
 - **Estado de alcance:** `anthropic.com` no está en la allowlist `scope.txt`; se consultó crt.sh como fuente pública de certificados, no como autorización para probar el dominio ni sus subdominios.
 - **Técnica:** Consulta de certificados TLS públicos mediante crt.sh.
@@ -199,6 +200,7 @@ Los certificados TLS que se publican en internet pueden incluir los nombres de l
 ## Registro 10 — Huella tecnológica con Netcraft
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo consultado:** anthropic.com
 - **Estado de alcance:** `anthropic.com` no está en `scope.txt`; se consultó el informe público de Netcraft como fuente de información y no se considera un objetivo autorizado para pruebas.
 - **Técnica:** Fingerprinting pasivo mediante Netcraft Site Report.
@@ -221,6 +223,7 @@ Netcraft reúne información pública sobre cómo parece estar montado un sitio:
 ## Registro 11 — Consulta de robots.txt
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** anthropic.com
 - **Estado de alcance:** `anthropic.com` no está en `scope.txt`; la petición GET a `robots.txt` se hizo para consultar un archivo público, pero no amplía el alcance autorizado.
 - **Técnica:** Revisión pasiva de robots.txt.
@@ -239,6 +242,7 @@ Netcraft reúne información pública sobre cómo parece estar montado un sitio:
 ## Registro 12 — Consulta de security.txt
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** anthropic.com
 - **Estado de alcance:** `anthropic.com` no está en `scope.txt`; la petición GET consultó un archivo público de contacto y no autoriza pruebas sobre el dominio.
 - **Técnica:** Revisión pasiva del archivo security.txt.
@@ -257,6 +261,7 @@ Netcraft reúne información pública sobre cómo parece estar montado un sitio:
 ## Registro 13 — Shodan InternetDB
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** IP 160.79.104.10, obtenida previamente mediante DNS.
 - **Estado de alcance:** la IP se obtuvo al consultar `claude.ai`, que sí figura en `scope.txt`; aquí solo se consultó la base pública de Shodan, sin contactar con los puertos listados.
 - **Técnica:** Consulta pasiva de información pública con Shodan InternetDB.
@@ -276,6 +281,7 @@ InternetDB es una base pública de Shodan que muestra datos que ya conoce sobre 
 ## Registro 14 — Google dorks: documentos PDF
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** anthropic.com
 - **Estado de alcance:** la búsqueda usa `anthropic.com` como filtro del buscador; no convierte los resultados ni los hosts enlazados en activos autorizados por `scope.txt`.
 - **Técnica:** Búsqueda pasiva mediante Google dorks.
@@ -294,6 +300,7 @@ Un dork es una búsqueda normal en Google con filtros para acotar resultados. Us
 ## Registro 15 — Búsqueda pasiva de correos con theHarvester
 
 - **Fecha:** 28/10/2026
+- **Hora:** no registrada en la evidencia conservada.
 - **Objetivo:** anthropic.com
 - **Estado de alcance:** `anthropic.com` no está en `scope.txt`; theHarvester consultó la fuente pública crt.sh, sin buscar directamente en los buzones de empleados.
 - **Técnica:** Recopilación pasiva de información pública.
@@ -310,3 +317,14 @@ Un dork es una búsqueda normal en Google con filtros para acotar resultados. Us
 theHarvester sirve para reunir datos públicos, como correos y nombres de host, desde distintas fuentes. En esta ejecución le pedí que usara crt.sh, que se basa en certificados y no es una fuente especializada en correos. No devolvió emails ni personas. Me llevo únicamente que esa combinación de herramienta y fuente no encontró resultados; no puedo decir que no existan correos públicos ni deducir un patrón corporativo con esta consulta.
 
 ![Ejecución de theHarvester para anthropic.com](IMGS/correos_theharvester_publicos.png)
+
+## Contraste entre fuentes
+
+- En `claude.ai`, ICANN Lookup y `dig` coinciden en los nameservers `isla.ns.cloudflare.com` y `randy.ns.cloudflare.com` (registros 2 y 8).
+- La dirección IPv4 `160.79.104.10` obtenida con `dig claude.ai A` es la misma que Shodan InternetDB consultó después (registros 3 y 13). Esto enlaza la consulta con la fuente pública, pero no verifica los puertos ni el estado actual del servicio.
+- Netcraft también reportó `160.79.104.10` y `2607:6bc0::10`, pero su informe era de `anthropic.com`, mientras que las consultas DNS se hicieron para `claude.ai` (registros 3, 7 y 10). La coincidencia de direcciones es una pista para el inventario, no prueba por sí sola que ambos nombres tengan la misma configuración o autorización.
+- El resultado de crt.sh se contrastó con `scope.txt` para separar nombres expresamente enumerados de nombres descubiertos. La captura conserva más entradas que las transcritas como ejemplos; por eso no se considera un inventario completo de subdominios.
+
+## Técnicas opcionales
+
+No se documentó ninguna técnica opcional de la lista del enunciado. No se consultó Wayback Machine, no se analizaron metadatos de documentos con exiftool, no se investigaron perfiles de LinkedIn, no se consultó Have I Been Pwned ni se usó Sherlock. Se deja constancia para distinguir las ocho técnicas obligatorias de las opcionales.
