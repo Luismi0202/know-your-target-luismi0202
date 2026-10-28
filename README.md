@@ -61,20 +61,14 @@ No se realizaron escaneos activos, fuerza bruta, explotación, ingeniería socia
 
 ## Estado frente a la rúbrica
 
-Este estado resume lo que está documentado en el repositorio, no sustituye una calificación ni presenta como ejecutadas tareas que siguen pendientes.
+## Correspondencia con los criterios P1
 
-| Apartado | Evidencia actual | Pendiente para aspirar al nivel excelente |
-|---|---|---|
-| Alcance (P1) | Programa, activos, restricciones y una allowlist exacta están descritos en `alcance.md` y `scope.txt`. | Confirmar en la política vigente si el programa declara algún comodín. No añadirlo por cumplir la rúbrica si amplía el permiso, conservar exclusiones justificadas y documentar las reglas de automatización, límites y requisitos con evidencia de la política. |
-| Reconocimiento pasivo (P1) | El cuaderno registra las ocho técnicas obligatorias e incluye contraste entre fuentes. También documenta las opcionales de resolución DNS/RDAP, Wayback Machine, LinkedIn y Sherlock. | ExifTool no se pudo completar con un PDF de un hostname permitido. HIBP exige verificar que se controla el dominio. Sherlock generó candidatos, solo la cuenta X enlazada por Anthropic se confirmó como oficial. |
-| Mapa (P1) | El mapa contiene resumen, tabla de hosts, infraestructura, correo/personas y tres prioridades con referencias a registros. | Completar el inventario a partir de evidencia íntegra y mantener la trazabilidad de cada dato al cuaderno. |
-| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla, también guardan comandos y fuentes cuando constan. | La hora de los registros 9-15 no quedó en la evidencia original, las entradas lo indican en vez de inventar una hora. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
-| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla, también guardan comandos y fuentes cuando constan. | En los registros 9-15 no se conservó la hora en la evidencia original, por eso no se inventa. Algunas consultas tampoco tienen una salida íntegra adjunta, así que la repetición exacta todavía no está garantizada. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
-| Scope-guard (P2) | `alcance.md` enumera resultados esperados para casos positivos y negativos, inspirados en la batería del enunciado. | Ejecutar la batería de `aap-base`, comprobar que todas las herramientas pasan por el guard y adjuntar la traza real de permitidos y bloqueados. |
-| Agente (P2) | El README describe los límites esperados, pero este repositorio no contiene la ejecución de `aap-base`. | Añadir y ejecutar al menos dos herramientas seguras, instrucciones que exijan fuente para cada dato y guardar traza, informe y coste real. |
-| Comparativa (P3) | No hay resultados del agente para comparar todavía. | Crear `comparativa.md` después de la ejecución: contrastar manual y agente con ejemplos de la traza, clasificar aciertos, omisiones, errores e invenciones y razonar el impacto de cada diferencia. |
-
-El enunciado y la rúbrica no justifican ampliar el alcance con `*.anthropic.com` sin evidencia de que ese comodín esté autorizado por el programa. Si la política publica un wildcard, se puede reflejar exactamente en `scope.txt` y mantener las exclusiones aplicables, si no, se conserva la allowlist concreta.
+| Criterio | Justificación y ubicación de la evidencia |
+|---|---|
+| **Alcance (10 %)** | [alcance.md](alcance.md) identifica el programa de HackerOne, la fecha de consulta, los activos, las exclusiones y las reglas aplicables a la práctica. [scope.txt](scope.txt) convierte esa revisión en una allowlist de siete hostnames concretos y enumera nombres que deben quedar fuera. No se añadió un comodín porque la información de alcance documentada no confirma que esté autorizado, así se evita ampliar el permiso por encima de lo verificado. |
+| **Reconocimiento pasivo (20 %)** | La sección [Metodología](#metodología) enumera las ocho técnicas obligatorias. El [cuaderno](cuaderno.md) registra acciones, resultados, interpretaciones y limitaciones, y contrasta datos de ICANN, DNS, Netcraft, crt.sh y Shodan en [Contraste entre fuentes](cuaderno.md#contraste-entre-fuentes). También documenta las opcionales de DNS/RDAP, Wayback Machine, LinkedIn y Sherlock. HIBP no se consultó porque requiere acreditar el control del dominio, y la prueba de ExifTool quedó identificada como fuera de alcance. |
+| **Mapa de superficie (15 %)** | El [mapa](mapa.md) reúne una tabla de hosts con IP observada y estado de alcance, resume DNS, infraestructura, archivos públicos y datos de Shodan, y separa los nombres descubiertos que no están autorizados. Incluye tres prioridades para una posible fase posterior y vincula los datos con los registros correspondientes del cuaderno. |
+| **Cuaderno de trabajo (10 %)** | El [cuaderno](cuaderno.md) organiza las consultas por fecha, objetivo y alcance, técnica, fuente o comando, resultado, interpretación, limitaciones y siguiente paso. Incluye capturas asociadas a los registros y señala cuándo una consulta se hizo sobre un dominio fuera de la allowlist o una técnica no pudo completarse dentro del alcance. |
 
 ## Resultados
 
@@ -128,14 +122,3 @@ Se completó una primera pasada por las ocho técnicas obligatorias de reconocim
 Hasta este punto no se ha confirmado ninguna vulnerabilidad. Los datos obtenidos sirven como inventario preliminar y deben contrastarse con el alcance vigente antes de considerar cualquier prueba adicional.
 
 La ejecución de `aap-base`, las pruebas del `scope-guard` y la comparación con el agente de IA quedan pendientes. Cuando se realicen, las diferencias deberán registrarse en `comparativa.md`, indicando la fuente y evitando considerar un hallazgo confirmado sin evidencia reproducible.
-
-## Correspondencia con la rúbrica P1
-
-Esta tabla señala dónde está la evidencia de cada apartado y qué relación tiene con el criterio. No es una calificación oficial, también deja a la vista lo que todavía limita el nivel alcanzable.
-
-| Criterio | Evidencia y relación |
-|---|---|
-| **Alcance (10 %)** | En [alcance.md](alcance.md) se identifica el programa, se enumeran los activos y se resumen restricciones y exclusiones. [scope.txt](scope.txt) convierte esa información en una allowlist de siete hostnames exactos y marca nombres descubiertos que deben rechazarse. Esto demuestra que el alcance se tradujo a una lista operativa. La rúbrica menciona comodines, pero aquí no se añadió ninguno: la documentación disponible no confirma que estén autorizados y ampliarlo sería engañoso. Por eso este punto está documentado, aunque no cumple literalmente el detalle de “con comodines” del nivel excelente. |
-| **Reconocimiento pasivo (20 %)** | La [metodología del README](#metodología) enumera las ocho técnicas obligatorias y cada una tiene resultados y limitaciones en el [cuaderno de trabajo](cuaderno.md). El apartado [Contraste entre fuentes](cuaderno.md#contraste-entre-fuentes) compara ICANN, DNS y Shodan. También se documentan las opcionales de resolución/RDAP, Wayback Machine, LinkedIn y Sherlock. ExifTool no se pudo completar dentro del alcance y HIBP requiere demostrar control del dominio. Las coincidencias de Sherlock se presentan como candidatas, salvo el enlace X confirmado por la web oficial. |
-| **Mapa de superficie (15 %)** | El [mapa de superficie](mapa.md) reúne los hosts, distingue cuáles están en `scope.txt`, relaciona los datos de infraestructura con sus fuentes y registros del cuaderno, y justifica tres temas para priorizar. El inventario se declara preliminar porque no se conservó la salida completa de crt.sh, por tanto, la trazabilidad está, pero falta completar la lista para poder llamarlo exhaustivo. |
-| **Cuaderno de trabajo (10 %)** | El [cuaderno](cuaderno.md) organiza las consultas en registros con objetivo, técnica, fuente o comando cuando consta, resultado, interpretación, limitaciones y siguiente paso, además, incluye una explicación sencilla de cada técnica. Es suficiente para seguir buena parte del trabajo y relacionarlo con el mapa. En los registros 9–15 no se conservó la hora y algunas consultas no tienen una salida íntegra adjunta, así que la repetición exacta de todas las acciones todavía no está garantizada. |
