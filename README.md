@@ -30,14 +30,14 @@ La lista se encuentra en `scope.txt` y es la misma que se debe usar en la Parte 
 
 Se identificó `https://github.com/modelcontextprotocol` como excluido según la información del programa consultada. Los servicios de terceros no se consideran automáticamente dentro del alcance. Las pruebas de seguridad de modelos, como jailbreaks, se encuentran fuera del programa de infraestructura descrito.
 
-Durante el reconocimiento se usó `anthropic.com` como consulta en varias fuentes y se consultaron sus archivos públicos `robots.txt` y `security.txt`. Ese dominio no figura en `scope.txt`; estas observaciones se identifican como fuentes consultadas, no como permiso para probarlo. Para repetir el trabajo con el agente, no se debe añadir sin comprobar antes la política vigente.
+Durante el reconocimiento se usó `anthropic.com` como consulta en varias fuentes y se consultaron sus archivos públicos `robots.txt` y `security.txt`. Ese dominio no figura en `scope.txt`, estas observaciones se identifican como fuentes consultadas, no como permiso para probarlo. Para repetir el trabajo con el agente, no se debe añadir sin comprobar antes la política vigente.
 
 ## Comprobación prevista del scope-guard
 
-El `scope-guard` ya viene implementado en `aap-base`; este proyecto no lo programa. Al ejecutar el agente, se debe comprobar que permite un hostname exacto como `api.anthropic.com` y rechaza `status.anthropic.com`, `anthropic.com` y `anthropic.com.evil.net`. También se debe comprobar que `anthropic.atlassian.com` no da permiso para otros hosts de Atlassian. La política y los resultados de esas pruebas se deben conservar en la traza del agente. La ejecución aún está pendiente.
+El `scope-guard` ya viene implementado en `aap-base`, este proyecto no lo programa. Al ejecutar el agente, se debe comprobar que permite un hostname exacto como `api.anthropic.com` y rechaza `status.anthropic.com`, `anthropic.com` y `anthropic.com.evil.net`. También se debe comprobar que `anthropic.atlassian.com` no da permiso para otros hosts de Atlassian. La política y los resultados de esas pruebas se deben conservar en la traza del agente. La ejecución aún está pendiente.
 
 ## Metodología
-Se realizó reconocimiento de fuentes públicas sin escanear puertos ni probar vulnerabilidades, sin intentar acceder a datos privados y sin contactar con personas. Algunas consultas DNS y peticiones GET a archivos públicos generan tráfico; por eso "pasivo" describe aquí el tipo de actividad, no que no se envíe ningún paquete.
+Se realizó reconocimiento de fuentes públicas sin escanear puertos ni probar vulnerabilidades, sin intentar acceder a datos privados y sin contactar con personas. Algunas consultas DNS y peticiones GET a archivos públicos generan tráfico, por eso "pasivo" describe aquí el tipo de actividad, no que no se envíe ningún paquete.
 
 Técnicas utilizadas:
 
@@ -61,19 +61,20 @@ No se realizaron escaneos activos, fuerza bruta, explotación, ingeniería socia
 
 ## Estado frente a la rúbrica
 
-Este estado resume lo que está documentado en el repositorio; no sustituye una calificación ni presenta como ejecutadas tareas que siguen pendientes.
+Este estado resume lo que está documentado en el repositorio, no sustituye una calificación ni presenta como ejecutadas tareas que siguen pendientes.
 
 | Apartado | Evidencia actual | Pendiente para aspirar al nivel excelente |
 |---|---|---|
-| Alcance (P1) | Programa, activos, restricciones y una allowlist exacta están descritos en `alcance.md` y `scope.txt`. | Confirmar en la política vigente si el programa declara algún comodín. No añadirlo por cumplir la rúbrica si amplía el permiso; conservar exclusiones justificadas y documentar las reglas de automatización, límites y requisitos con evidencia de la política. |
-| Reconocimiento pasivo (P1) | El cuaderno registra las ocho técnicas obligatorias e incluye una sección de contraste entre fuentes. | Conservar la salida íntegra de crt.sh para completar la lista de nombres; registrar una técnica opcional si se realiza y solo después de comprobar que es apropiada y permitida. |
+| Alcance (P1) | Programa, activos, restricciones y una allowlist exacta están descritos en `alcance.md` y `scope.txt`. | Confirmar en la política vigente si el programa declara algún comodín. No añadirlo por cumplir la rúbrica si amplía el permiso, conservar exclusiones justificadas y documentar las reglas de automatización, límites y requisitos con evidencia de la política. |
+| Reconocimiento pasivo (P1) | El cuaderno registra las ocho técnicas obligatorias e incluye contraste entre fuentes. También documenta las opcionales de resolución DNS/RDAP, Wayback Machine, LinkedIn y Sherlock. | ExifTool no se pudo completar con un PDF de un hostname permitido. HIBP exige verificar que se controla el dominio. Sherlock generó candidatos, solo la cuenta X enlazada por Anthropic se confirmó como oficial. |
 | Mapa (P1) | El mapa contiene resumen, tabla de hosts, infraestructura, correo/personas y tres prioridades con referencias a registros. | Completar el inventario a partir de evidencia íntegra y mantener la trazabilidad de cada dato al cuaderno. |
-| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla; también guardan comandos y fuentes cuando constan. | La hora de los registros 9-15 no quedó en la evidencia original; las entradas lo indican en vez de inventar una hora. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
+| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla, también guardan comandos y fuentes cuando constan. | La hora de los registros 9-15 no quedó en la evidencia original, las entradas lo indican en vez de inventar una hora. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
+| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla, también guardan comandos y fuentes cuando constan. | En los registros 9-15 no se conservó la hora en la evidencia original, por eso no se inventa. Algunas consultas tampoco tienen una salida íntegra adjunta, así que la repetición exacta todavía no está garantizada. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
 | Scope-guard (P2) | `alcance.md` enumera resultados esperados para casos positivos y negativos, inspirados en la batería del enunciado. | Ejecutar la batería de `aap-base`, comprobar que todas las herramientas pasan por el guard y adjuntar la traza real de permitidos y bloqueados. |
 | Agente (P2) | El README describe los límites esperados, pero este repositorio no contiene la ejecución de `aap-base`. | Añadir y ejecutar al menos dos herramientas seguras, instrucciones que exijan fuente para cada dato y guardar traza, informe y coste real. |
 | Comparativa (P3) | No hay resultados del agente para comparar todavía. | Crear `comparativa.md` después de la ejecución: contrastar manual y agente con ejemplos de la traza, clasificar aciertos, omisiones, errores e invenciones y razonar el impacto de cada diferencia. |
 
-El enunciado y la rúbrica no justifican ampliar el alcance con `*.anthropic.com` sin evidencia de que ese comodín esté autorizado por el programa. Si la política publica un wildcard, se puede reflejar exactamente en `scope.txt` y mantener las exclusiones aplicables; si no, se conserva la allowlist concreta.
+El enunciado y la rúbrica no justifican ampliar el alcance con `*.anthropic.com` sin evidencia de que ese comodín esté autorizado por el programa. Si la política publica un wildcard, se puede reflejar exactamente en `scope.txt` y mantener las exclusiones aplicables, si no, se conserva la allowlist concreta.
 
 ## Resultados
 
@@ -119,7 +120,7 @@ La búsqueda `site:anthropic.com filetype:pdf` mostró documentos públicos inde
 La indexación en buscadores no demuestra que los documentos estén expuestos indebidamente.
 
 ### 8. Correos y metadatos
-La ejecución de `theHarvester -d anthropic.com -b crtsh` no devolvió IPs, correos, personas ni hosts en esa consulta. Esto solo describe el resultado de la fuente utilizada; no demuestra que no existan otros datos públicos.
+La ejecución de `theHarvester -d anthropic.com -b crtsh` no devolvió IPs, correos, personas ni hosts en esa consulta. Esto solo describe el resultado de la fuente utilizada, no demuestra que no existan otros datos públicos.
 
 ## Evaluación general
 Se completó una primera pasada por las ocho técnicas obligatorias de reconocimiento pasivo, documentando los resultados y las limitaciones de las fuentes consultadas.
@@ -127,3 +128,14 @@ Se completó una primera pasada por las ocho técnicas obligatorias de reconocim
 Hasta este punto no se ha confirmado ninguna vulnerabilidad. Los datos obtenidos sirven como inventario preliminar y deben contrastarse con el alcance vigente antes de considerar cualquier prueba adicional.
 
 La ejecución de `aap-base`, las pruebas del `scope-guard` y la comparación con el agente de IA quedan pendientes. Cuando se realicen, las diferencias deberán registrarse en `comparativa.md`, indicando la fuente y evitando considerar un hallazgo confirmado sin evidencia reproducible.
+
+## Correspondencia con la rúbrica P1
+
+Esta tabla señala dónde está la evidencia de cada apartado y qué relación tiene con el criterio. No es una calificación oficial, también deja a la vista lo que todavía limita el nivel alcanzable.
+
+| Criterio | Evidencia y relación |
+|---|---|
+| **Alcance (10 %)** | En [alcance.md](alcance.md) se identifica el programa, se enumeran los activos y se resumen restricciones y exclusiones. [scope.txt](scope.txt) convierte esa información en una allowlist de siete hostnames exactos y marca nombres descubiertos que deben rechazarse. Esto demuestra que el alcance se tradujo a una lista operativa. La rúbrica menciona comodines, pero aquí no se añadió ninguno: la documentación disponible no confirma que estén autorizados y ampliarlo sería engañoso. Por eso este punto está documentado, aunque no cumple literalmente el detalle de “con comodines” del nivel excelente. |
+| **Reconocimiento pasivo (20 %)** | La [metodología del README](#metodología) enumera las ocho técnicas obligatorias y cada una tiene resultados y limitaciones en el [cuaderno de trabajo](cuaderno.md). El apartado [Contraste entre fuentes](cuaderno.md#contraste-entre-fuentes) compara ICANN, DNS y Shodan. También se documentan las opcionales de resolución/RDAP, Wayback Machine, LinkedIn y Sherlock. ExifTool no se pudo completar dentro del alcance y HIBP requiere demostrar control del dominio. Las coincidencias de Sherlock se presentan como candidatas, salvo el enlace X confirmado por la web oficial. |
+| **Mapa de superficie (15 %)** | El [mapa de superficie](mapa.md) reúne los hosts, distingue cuáles están en `scope.txt`, relaciona los datos de infraestructura con sus fuentes y registros del cuaderno, y justifica tres temas para priorizar. El inventario se declara preliminar porque no se conservó la salida completa de crt.sh, por tanto, la trazabilidad está, pero falta completar la lista para poder llamarlo exhaustivo. |
+| **Cuaderno de trabajo (10 %)** | El [cuaderno](cuaderno.md) organiza las consultas en registros con objetivo, técnica, fuente o comando cuando consta, resultado, interpretación, limitaciones y siguiente paso, además, incluye una explicación sencilla de cada técnica. Es suficiente para seguir buena parte del trabajo y relacionarlo con el mapa. En los registros 9–15 no se conservó la hora y algunas consultas no tienen una salida íntegra adjunta, así que la repetición exacta de todas las acciones todavía no está garantizada. |

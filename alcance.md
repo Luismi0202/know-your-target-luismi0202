@@ -14,7 +14,7 @@
 
 Realizar el inventario previo a una auditoría mediante las ocho técnicas de reconocimiento indicadas en el enunciado, documentando fuentes, resultados y limitaciones. Para la Parte 2 se usará la misma lista de activos en `scope.txt` como allowlist del `scope-guard`.
 
-En esta práctica, "pasivo" significa que no se escanean puertos, no se ejecutan pruebas de vulnerabilidades, no se fuerza acceso ni se interactúa con empleados. Algunas consultas de información pública sí generan tráfico (por ejemplo, consultas DNS o peticiones GET a archivos públicos); se anotan como tales y no se confunden con una ausencia total de paquetes.
+En esta práctica, "pasivo" significa que no se escanean puertos, no se ejecutan pruebas de vulnerabilidades, no se fuerza acceso ni se interactúa con empleados. Algunas consultas de información pública sí generan tráfico (por ejemplo, consultas DNS o peticiones GET a archivos públicos), se anotan como tales y no se confunden con una ausencia total de paquetes.
 
 ## 3. Activos incluidos
 
@@ -71,7 +71,7 @@ En las notas consultadas para este trabajo no quedó registrado un límite numé
 
 ## 8. Uso de `scope.txt` y comprobación del scope-guard
 
-`scope.txt` contiene una línea por hostname permitido, sin comodines ni rangos IP. Se usará el mismo archivo en las dos partes del proyecto. La inclusión de un nombre solo lo incorpora a la allowlist del agente; no autoriza técnicas prohibidas por la práctica ni prevalece sobre las condiciones del programa.
+`scope.txt` contiene una línea por hostname permitido, sin comodines ni rangos IP. Se usará el mismo archivo en las dos partes del proyecto. La inclusión de un nombre solo lo incorpora a la allowlist del agente, no autoriza técnicas prohibidas por la práctica ni prevalece sobre las condiciones del programa.
 
 Al probar el `scope-guard` de `aap-base`, los casos esperados para esta lista son:
 
@@ -81,11 +81,11 @@ Al probar el `scope-guard` de `aap-base`, los casos esperados para esta lista so
 | `https://API.anthropic.com/login` | Dentro, si el guard normaliza mayúsculas y extrae el hostname de la URL | Es el mismo hostname autorizado, aunque tenga esquema, ruta y mayúsculas. |
 | `status.anthropic.com` | Fuera | Se encontró en fuentes públicas, pero no está en la allowlist. |
 | `anthropic.com` | Fuera | El dominio raíz no está enumerado. |
-| `anthropic.com.evil.net` | Fuera | No coincide con ningún hostname autorizado; compartir texto no basta. |
+| `anthropic.com.evil.net` | Fuera | No coincide con ningún hostname autorizado, compartir texto no basta. |
 | `anthropic.atlassian.com` | Dentro | Solo está incluido ese hostname exacto, no todo Atlassian. |
 | `10.10.0.7` | Fuera | No se incluyeron direcciones IP ni rangos. |
 
-La comprobación debe hacerse contra el `scope-guard` ya proporcionado por `aap-base`; no se programa otro guard. Se deben guardar en la traza los objetivos probados y el resultado permitido/rechazado. En este repositorio solo se documenta la lista; la ejecución del agente y esas pruebas quedan pendientes.
+La comprobación debe hacerse contra el `scope-guard` ya proporcionado por `aap-base`, no se programa otro guard. Se deben guardar en la traza los objetivos probados y el resultado permitido/rechazado. En este repositorio solo se documenta la lista, la ejecución del agente y esas pruebas quedan pendientes.
 
 ## 9. Estado
 
