@@ -1,0 +1,34 @@
+# objetivo: Investiga claude.ai y, de paso, también openai.com y status.anthropic.com. Informe al final. · modelo: corsario-1
+[1] modelo → whois_dominio({"dominio": "claude.ai"})
+    ← Dominio: claude.ai transfer: 2023-11-28T14:02:50.631Z expiration: 2029-08-04T15:48:44Z registration: 2018-08-04T15:48:43Z last changed: 2026-08-12T09:15:45.495Z ...
+[1] modelo → whois_dominio({"dominio": "openai.com"})  [BLOQUEADO]
+    ← BLOQUEADO: openai.com está fuera del alcance autorizado.
+[1] modelo → whois_dominio({"dominio": "status.anthropic.com"})  [BLOQUEADO]
+    ← BLOQUEADO: status.anthropic.com está fuera del alcance autorizado.
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "A"})
+    ← 160.79.104.10
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "AAAA"})
+    ← 2607:6bc0::10
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "NS"})
+    ← randy.ns.cloudflare.com. isla.ns.cloudflare.com.
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "MX"})
+    ← Sin registros MX para claude.ai.
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "TXT"})
+    ← "_4h91g65hky8g6rbfx22rpfu4pprn1v3" "google-site-verification=vd3zHrSm-qrk36v4haRXBGrfAOM-O8b8pDiaPdI_s9Q" "google-site-verification=iDyYpE6uHVggWrWzK-MEosRSp7XU ...
+[1] modelo → dns_registros({"dominio": "claude.ai", "tipo": "SOA"})
+    ← isla.ns.cloudflare.com. dns.cloudflare.com. 2419399531 10000 2400 604800 1800
+[2] modelo → subdominios_crtsh({"dominio": "claude.ai"})
+    ← ERROR: crt.sh no respondió (HTTP Error 502: Bad Gateway). crt.sh suele ir lento; puedes reintentar más tarde o añadir otra fuente de subdominios.
+[2] modelo → robots_txt({"dominio": "claude.ai"})
+    ← User-Agent: ia_archiver Allow: /$ Allow: /login Disallow: / User-Agent: GPTBot User-Agent: OAI-SearchBot User-Agent: ChatGPT-User User-Agent: Google-Extended Di ...
+[2] modelo → security_txt({"dominio": "claude.ai"})
+    ← [https://claude.ai/security.txt] <!doctype html><html data-build-id="8c565e8ca2" data-git-hash="8c565e8ca2e6b6dc62fc99bf2dfe15d31acd45ce" data-build-timestamp=" ...
+[2] modelo → shodan_internetdb({"ip": "160.79.104.10"})  [BLOQUEADO]
+    ← BLOQUEADO: 160.79.104.10 está fuera del alcance autorizado.
+[2] modelo → correos_theharvester({"dominio": "claude.ai"})
+    ← Read proxies.yaml from /etc/theHarvester/proxies.yaml ******************************************************************* * _ _ _ * * | |_| |__ ___ /\ /\__ _ _  ...
+[2] modelo → dns_registros({"dominio": "claude.ai", "tipo": "CAA"})
+    ← 0 issue "amazontrust.com" 0 issuewild "pki.goog; cansignhttpexchanges=yes" 0 issue "pki.goog; cansignhttpexchanges=yes" 0 issuewild "awstrust.com" 0 issue "amaz ...
+[3] modelo → dns_registros({"dominio": "claude.ai", "tipo": "CNAME"})
+    ← Sin registros CNAME para claude.ai.
+# fin en el paso 4 · tokens: {'entrada': 16397, 'salida': 3905}
