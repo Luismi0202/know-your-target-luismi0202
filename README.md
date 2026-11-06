@@ -1,129 +1,83 @@
-# Proyecto 1 — Know Your Target
+# Proyecto 1 · Know Your Target
 
-## Autor
-[Tu nombre o identificador académico]
+## Quién soy
 
-## Objetivo
-Anthropic
+- **Alumno:** Luis Miguel Gomila Domínguez
+- **Centro:** IES Rafael Alberti
+- **Unidad:** UD1 · Eyes on Target
 
-## Programa
-Anthropic — HackerOne Bug Bounty Program
+## Objetivo elegido
 
-## Política
-https://hackerone.com/anthropic
+| | |
+|---|---|
+| **Organización** | Anthropic |
+| **Programa** | Anthropic Bug Bounty (programa público con recompensa) |
+| **Plataforma** | HackerOne |
+| **Política** | https://hackerone.com/anthropic |
+| **Fecha de consulta** | 28/10/2026 |
 
-## Fecha de consulta
-2026-10-28
+Elegí Anthropic porque tiene un programa público y activo en HackerOne, con varios activos web (`claude.ai`, la API, la consola, la documentación y el soporte), y porque me interesaba ver la superficie de ataque de una empresa de IA.
 
-## Alcance
-Se preparó una allowlist de siete hostnames concretos identificados en la información del programa:
+El programa no publica un comodín del tipo `*.anthropic.com`, así que mi alcance es una **lista blanca de siete hostnames exactos**:
 
-- `claude.ai`
-- `api.anthropic.com`
-- `api-staging.anthropic.com`
-- `console.anthropic.com`
-- `docs.anthropic.com`
-- `support.anthropic.com`
-- `anthropic.atlassian.com`
+```text
+claude.ai
+api.anthropic.com
+api-staging.anthropic.com
+console.anthropic.com
+docs.anthropic.com
+support.anthropic.com
+anthropic.atlassian.com
+```
 
-La lista se encuentra en `scope.txt` y es la misma que se debe usar en la Parte 2 con `aap-base`. No contiene comodines: que un subdominio aparezca en certificados, Shodan o Google no lo añade al alcance. La inclusión de un hostname tampoco permite saltarse las restricciones de la práctica o del programa.
+Excluyo expresamente (`!`) los nombres que encontré durante el reconocimiento pero que no están autorizados: `anthropic.com`, `status.anthropic.com`, `www.anthropic.com`, `www-cdn.anthropic.com`, `claude.anthropic.com` y `a.anthropic.com`. El detalle está en [`alcance.md`](alcance.md).
 
-Se identificó `https://github.com/modelcontextprotocol` como excluido según la información del programa consultada. Los servicios de terceros no se consideran automáticamente dentro del alcance. Las pruebas de seguridad de modelos, como jailbreaks, se encuentran fuera del programa de infraestructura descrito.
+## Contenido del repositorio
 
-Durante el reconocimiento se usó `anthropic.com` como consulta en varias fuentes y se consultaron sus archivos públicos `robots.txt` y `security.txt`. Ese dominio no figura en `scope.txt`; estas observaciones se identifican como fuentes consultadas, no como permiso para probarlo. Para repetir el trabajo con el agente, no se debe añadir sin comprobar antes la política vigente.
-
-## Comprobación prevista del scope-guard
-
-El `scope-guard` ya viene implementado en `aap-base`; este proyecto no lo programa. Al ejecutar el agente, se debe comprobar que permite un hostname exacto como `api.anthropic.com` y rechaza `status.anthropic.com`, `anthropic.com` y `anthropic.com.evil.net`. También se debe comprobar que `anthropic.atlassian.com` no da permiso para otros hosts de Atlassian. La política y los resultados de esas pruebas se deben conservar en la traza del agente. La ejecución aún está pendiente.
-
-## Metodología
-Se realizó reconocimiento de fuentes públicas sin escanear puertos ni probar vulnerabilidades, sin intentar acceder a datos privados y sin contactar con personas. Algunas consultas DNS y peticiones GET a archivos públicos generan tráfico; por eso "pasivo" describe aquí el tipo de actividad, no que no se envíe ningún paquete.
-
-Técnicas utilizadas:
-
-1. **Registro de dominio:** consulta de ICANN Lookup para `claude.ai`, al no funcionar la consulta WHOIS desde la terminal.
-2. **Registros DNS:** consultas `dig` para A, AAAA, NS, MX, TXT y CAA.
-3. **Subdominios:** consulta de certificados públicos mediante `crt.sh` para `anthropic.com`.
-4. **Huella tecnológica:** consulta del informe de Netcraft para `anthropic.com`.
-5. **Ficheros públicos:** consulta de `robots.txt` y `security.txt`.
-6. **Servicios expuestos en fuentes públicas:** consulta de Shodan InternetDB para la IP `160.79.104.10`, sin escanear puertos.
-7. **Google dorks:** búsqueda de documentos PDF indexados mediante `site:anthropic.com filetype:pdf`.
-8. **Correos y metadatos públicos:** ejecución de `theHarvester` usando la fuente `crtsh`. Esta fuente se basa en certificados y no es especializada en correos, por lo que la ausencia de resultados no demuestra que no existan direcciones públicas.
-
-No se realizaron escaneos activos, fuerza bruta, explotación, ingeniería social ni intentos de acceso a información privada. No se crearon cuentas en los sistemas de la organización.
-
-## Documentos
-- `alcance.md`: reglas, restricciones y alcance normalizado.
-- `scope.txt`: allowlist exacta de siete hostnames, sin comodines.
-- `cuaderno.md`: registro de fechas, objetivos, acciones, resultados, siguientes pasos y una explicación sencilla de para qué sirvió cada consulta.
-- `mapa.md`: resumen de la superficie de ataque observada mediante fuentes públicas.
-- `comparativa.md`: comparación con el agente de IA, pendiente de completar cuando se disponga de sus resultados.
-
-## Estado frente a la rúbrica
-
-Este estado resume lo que está documentado en el repositorio; no sustituye una calificación ni presenta como ejecutadas tareas que siguen pendientes.
-
-| Apartado | Evidencia actual | Pendiente para aspirar al nivel excelente |
+| Parte | Documento | Qué contiene |
 |---|---|---|
-| Alcance (P1) | Programa, activos, restricciones y una allowlist exacta están descritos en `alcance.md` y `scope.txt`. | Confirmar en la política vigente si el programa declara algún comodín. No añadirlo por cumplir la rúbrica si amplía el permiso; conservar exclusiones justificadas y documentar las reglas de automatización, límites y requisitos con evidencia de la política. |
-| Reconocimiento pasivo (P1) | El cuaderno registra las ocho técnicas obligatorias e incluye una sección de contraste entre fuentes. | Conservar la salida íntegra de crt.sh para completar la lista de nombres; registrar una técnica opcional si se realiza y solo después de comprobar que es apropiada y permitida. |
-| Mapa (P1) | El mapa contiene resumen, tabla de hosts, infraestructura, correo/personas y tres prioridades con referencias a registros. | Completar el inventario a partir de evidencia íntegra y mantener la trazabilidad de cada dato al cuaderno. |
-| Cuaderno (P1) | Las entradas describen objetivo, alcance, acción, resultado, siguiente paso y una explicación sencilla; también guardan comandos y fuentes cuando constan. | La hora de los registros 9-15 no quedó en la evidencia original; las entradas lo indican en vez de inventar una hora. En futuras consultas, guardar fecha, hora y salida/captura desde el momento de ejecución. |
-| Scope-guard (P2) | `alcance.md` enumera resultados esperados para casos positivos y negativos, inspirados en la batería del enunciado. | Ejecutar la batería de `aap-base`, comprobar que todas las herramientas pasan por el guard y adjuntar la traza real de permitidos y bloqueados. |
-| Agente (P2) | El README describe los límites esperados, pero este repositorio no contiene la ejecución de `aap-base`. | Añadir y ejecutar al menos dos herramientas seguras, instrucciones que exijan fuente para cada dato y guardar traza, informe y coste real. |
-| Comparativa (P3) | No hay resultados del agente para comparar todavía. | Crear `comparativa.md` después de la ejecución: contrastar manual y agente con ejemplos de la traza, clasificar aciertos, omisiones, errores e invenciones y razonar el impacto de cada diferencia. |
+| Alcance | [`alcance.md`](alcance.md) | Programa, reglas que afectan al proyecto, qué está dentro y fuera, y casos de prueba del scope-guard. |
+| Alcance | [`scope.txt`](scope.txt) | El alcance en formato de una línea por objetivo. Es el mismo en la Parte 1 y en la Parte 2. |
+| Parte 1 | [`cuaderno.md`](cuaderno.md) | Cuaderno de trabajo: 15 registros con fecha, objetivo, comando, resultado y siguiente paso, más capturas. |
+| Parte 1 | [`mapa.md`](mapa.md) | Mapa de superficie de ataque: resumen, tabla de hosts, infraestructura, correos y personas, y tres puntos de interés. |
+| Parte 2 | [`agente/pruebas.md`](agente/pruebas.md) | Comprobación del scope-guard (2.1), herramientas (2.2), prompt (2.3), ejecución (2.4) e intentos de sacarlo del alcance (2.5). |
+| Parte 2 | [`agente/src/`](agente/src/) | Mi código: `tus_herramientas.py` con las herramientas que añadí, `lanzar.py` con la lista `HERRAMIENTAS` y el test actualizado. |
+| Parte 2 | [`agente/instrucciones.md`](agente/instrucciones.md) | La plantilla del prompt (sin modificar). |
+| Parte 2 | [`agente/traza.jsonl`](agente/traza.jsonl) · [`traza.log`](agente/traza.log) | La ejecución completa del agente contra Anthropic. |
+| Parte 2 | [`agente/informe.md`](agente/informe.md) | El informe que generó el agente. |
+| Parte 2 | `agente/traza_fuera_1.jsonl` · `agente/traza_fuera_2.jsonl` | Las trazas de los dos intentos de sacarlo del alcance, con sus informes (`informe_fuera_1.md`, `informe_fuera_2.md`). |
+| Parte 3 | [`comparativa.md`](comparativa.md) | Comparación entre mi reconocimiento y el del agente, clasificación de sus fallos y reflexión. |
+| Capturas | [`IMGS/`](IMGS/) | Capturas de la Parte 1 y de la Parte 2 (las de la Parte 2 empiezan por `p2_`). |
 
-El enunciado y la rúbrica no justifican ampliar el alcance con `*.anthropic.com` sin evidencia de que ese comodín esté autorizado por el programa. Si la política publica un wildcard, se puede reflejar exactamente en `scope.txt` y mantener las exclusiones aplicables; si no, se conserva la allowlist concreta.
+## Resumen del trabajo
 
-## Resultados
+### Parte 1 · Mapa de superficie de ataque
 
-### 1. Registro de dominio
-Para `claude.ai`, ICANN Lookup indicó Markmonitor Inc. como registrador y los nameservers `isla.ns.cloudflare.com` y `randy.ns.cloudflare.com`. Los datos del titular aparecen redactados por privacidad. Se anotaron las fechas de creación, actualización y expiración, junto con los estados del dominio y la información DNSSEC publicada.
+Apliqué las ocho técnicas obligatorias, solo de forma pasiva: WHOIS (ICANN Lookup, porque `whois` no funcionaba desde el Kali), DNS con `dig` (A, AAAA, MX, NS, TXT, CAA), subdominios con crt.sh, Netcraft, `robots.txt` y `security.txt`, Shodan InternetDB, Google dorks y theHarvester.
 
-### 2. DNS
-Las consultas para `claude.ai` devolvieron:
+Lo más relevante:
 
-- **A:** `160.79.104.10`
-- **AAAA:** `2607:6bc0::10`
-- **NS:** `isla.ns.cloudflare.com` y `randy.ns.cloudflare.com`
-- **MX:** no se devolvieron registros MX en la consulta realizada.
-- **TXT:** seis registros, incluidos valores de verificación de Google y `v=spf1 -all`.
-- **CAA:** 18 registros en la respuesta observada.
+- `claude.ai` usa DNS de Cloudflare, resuelve a `160.79.104.10` / `2607:6bc0::10`, no tiene MX y publica `v=spf1 -all`.
+- crt.sh muestra muchos subdominios de `anthropic.com`; los clasifiqué contra mi alcance, y nombres como `status.` o `www.` quedan fuera.
+- Shodan asocia la IP de `claude.ai` a 11 puertos y a nombres que no están en mi alcance.
+- No encontré ningún correo ni un patrón de correo con theHarvester.
 
-Estos datos son una instantánea de las respuestas DNS y pueden cambiar.
+### Parte 2 · First Agent
 
-### 3. Subdominios
-La consulta de certificados públicos de `crt.sh` mostró, entre otros, `api.anthropic.com`, `api-staging.anthropic.com`, `console.anthropic.com`, `docs.anthropic.com`, `support.anthropic.com` y `status.anthropic.com`.
+Usé `aap-base` en el Kali del aula con mi mismo `scope.txt`. A las tres herramientas de partida (`whois_dominio`, `dns_registros`, `subdominios_crtsh`) les añadí `robots_txt`, `security_txt`, `shodan_internetdb` y `correos_theharvester`, todas protegidas por el scope-guard, y el tipo `CAA` en `dns_registros`.
 
-La aparición de un nombre en certificados no demuestra que el host esté activo ni que esté autorizado para pruebas.
+- **Scope-guard:** 12 de 12 casos salen como esperaba.
+- **Ejecución:** modelo `corsario-1`, 7 minutos, 34 558 tokens de entrada y 6 886 de salida.
+- **Intentos de sacarlo del alcance:** el guard bloqueó todos (otra empresa, subdominio excluido, dominio raíz, URL e IP) y el modelo no insistió por otro camino.
 
-### 4. Huella tecnológica
-Netcraft reportó tecnologías y proveedores asociados a `anthropic.com`, incluidos Cloudflare, Google HTTPS Load Balancer, JavaScript y React Server Components. El informe también mostró información de SPF y una política DMARC `p=reject`.
+### Parte 3 · Comparativa
 
-Las identificaciones de tecnologías proporcionadas por terceros pueden ser incompletas o variar con el tiempo.
+El agente fue más rápido y más sistemático: resolvió el DNS de todos los hosts del alcance, cosa que yo no hice. Pero se quedó sin subdominios, tecnologías, dorks ni Shodan, por falta de herramientas o por las limitaciones de mi alcance. Además, añadió al informe suposiciones que ninguna herramienta le devolvió. Por eso, el informe del agente hay que revisarlo siempre contra la traza.
 
-### 5. Ficheros públicos
-- **`robots.txt`:** se observó `Allow: /` y una referencia al sitemap `https://www.anthropic.com/sitemap.xml`.
-- **`security.txt`:** publicó un contacto de HackerOne, una política de divulgación responsable, el idioma preferido inglés y una expiración declarada para el 31 de diciembre de 2026.
+## Reglas que he seguido
 
-Estos archivos aportan información pública, pero por sí mismos no demuestran una vulnerabilidad.
-
-### 6. Servicios listados públicamente
-Shodan InternetDB asoció la IP `160.79.104.10` con los nombres `claude.anthropic.com` y `a.anthropic.com`, y reportó Cloudflare como CPE.
-
-La fuente enumeró los puertos 80, 443, 2052, 2082, 2083, 2086, 2087, 2096, 8080, 8443 y 8880, sin vulnerabilidades listadas en esa respuesta. No se verificó el estado actual de esos puertos mediante escaneo.
-
-### 7. Google dorks
-La búsqueda `site:anthropic.com filetype:pdf` mostró documentos públicos indexados, incluidos informes corporativos, publicaciones de investigación y documentos relacionados con seguridad de IA.
-
-La indexación en buscadores no demuestra que los documentos estén expuestos indebidamente.
-
-### 8. Correos y metadatos
-La ejecución de `theHarvester -d anthropic.com -b crtsh` no devolvió IPs, correos, personas ni hosts en esa consulta. Esto solo describe el resultado de la fuente utilizada; no demuestra que no existan otros datos públicos.
-
-## Evaluación general
-Se completó una primera pasada por las ocho técnicas obligatorias de reconocimiento pasivo, documentando los resultados y las limitaciones de las fuentes consultadas.
-
-Hasta este punto no se ha confirmado ninguna vulnerabilidad. Los datos obtenidos sirven como inventario preliminar y deben contrastarse con el alcance vigente antes de considerar cualquier prueba adicional.
-
-La ejecución de `aap-base`, las pruebas del `scope-guard` y la comparación con el agente de IA quedan pendientes. Cuando se realicen, las diferencias deberán registrarse en `comparativa.md`, indicando la fuente y evitando considerar un hallazgo confirmado sin evidencia reproducible.
+- Solo técnicas pasivas: sin escaneo de puertos, sin escáneres de vulnerabilidades y sin fuerza bruta.
+- No he interactuado con personas ni he creado cuentas en servicios de Anthropic.
+- No he encontrado datos sensibles; si los hubiera encontrado, los habría anotado sin el dato y habría avisado al profesor.
+- Algunas consultas de la Parte 1 se hicieron sobre `anthropic.com`, que no está en el alcance, como consulta de fuentes públicas. Están identificadas así en el cuaderno y el mapa, y no se tratan como autorización.
+- El `.env` con la clave de la IA no está en el repositorio.
