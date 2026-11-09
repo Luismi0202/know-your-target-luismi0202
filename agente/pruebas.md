@@ -191,16 +191,22 @@ herramienta que respalde un dato, no lo incluyas.
 
 ### Cómo cambia el prompt
 
-Hice un cambio temporal: añadí `!api-staging.anthropic.com` al `scope.txt` y comenté `correos_theharvester` en `HERRAMIENTAS`. Volví a generar el prompt y lo comparé:
+Para ver cómo cambia el prompt, hice un cambio temporal en el alcance: abrí el `scope.txt` con `nano` y añadí al final la exclusión `!api-staging.anthropic.com`.
+
+![Exclusión temporal de api-staging en scope.txt](../IMGS/p2_scope_excluye_apistaging.png)
+
+Volví a generar el prompt y lo comparé con el que había guardado antes:
 
 ```bash
 .venv/bin/python lanzar.py --ver-prompt > prompt_despues.txt
 diff prompt_antes.txt prompt_despues.txt
 ```
 
-Cambian exactamente dos cosas: `api-staging.anthropic.com` pasa de la línea `Autorizado:` a la de `Excluido (nunca):`, y desaparece la línea de `correos_theharvester`. El resto del prompt es idéntico. Eso confirma que el modelo solo "sabe" del alcance y de las herramientas lo que le pasa este texto.
+![diff entre el prompt antes y después del cambio](../IMGS/p2_prompt_diff.png)
 
-<!-- Si tienes la captura del diff, ponla aquí: ![diff del prompt](../IMGS/p2_prompt_diff.png) -->
+El `diff` solo marca la línea 13 (`13c13`): la línea `Excluido (nunca):` pasa a terminar en `api-staging.anthropic.com`. El resto del prompt es idéntico. Eso confirma que el modelo solo "sabe" del alcance lo que le pasa este texto: si cambio una línea de `scope.txt`, cambia esa línea del prompt y nada más. Con las herramientas pasa lo mismo: cada función de `HERRAMIENTAS` es una línea de `## Herramientas disponibles`, así que si quito o añado una, desaparece o aparece su línea.
+
+**Ojo:** esta exclusión se me quedó puesta y lancé la ejecución del 2.4 con ella. Por eso en esa ejecución `api-staging.anthropic.com` sale `BLOQUEADO` (lo explico en el 2.4).
 
 ### Qué le dice el prompt al modelo
 
@@ -211,7 +217,11 @@ No modifiqué `instrucciones.md`; usé la plantilla original.
 
 ### Límite de gasto
 
-Uso la IA del aula (`corsario-1`), que ya tiene un cupo fijado por el profesor; el consumo lo consulto con `ia-cupo`. No usé ninguna clave propia.
+Uso la IA del aula (`corsario-1`) con la clave que nos da el profesor, sin ninguna clave propia. Antes de lanzar el agente comprobé el gasto con `ia-cupo`:
+
+![Gasto de la IA del aula antes de lanzar el agente](../IMGS/p2_cupo_antes.png)
+
+Marca `Gastado: 0.000000 USD (informativo, sin tope)` y que el contador se reinicia el 01/12/2026. Como el cupo del aula es solo informativo, el límite real lo pone el propio agente: `--max-pasos` (lo subí a 25) y `--max-tokens` (60 000 por defecto). Si los supera, el motor para la ejecución y lo deja anotado en la traza (`PARADO por límite`).
 
 ---
 
@@ -232,7 +242,8 @@ time AAP_TIMEOUT=600 .venv/bin/python lanzar.py "Investiga claude.ai y el resto 
 | Tokens de salida | 6 886 |
 | Total | 41 444 tokens |
 | Tiempo real | 7 min 0,7 s |
-| Coste en euros | No aplica: la IA del aula no muestra coste en euros, solo el cupo consumido (`ia-cupo`) |
+| Pasos y llamadas | 6 pasos del bucle y 53 llamadas a herramientas (`# fin en el paso 6` en la traza) |
+| Coste | La IA del aula no factura en euros: `ia-cupo` muestra un gasto en USD solo informativo, que antes de lanzar estaba a 0 (captura del 2.3) |
 
 Después generé la versión legible de la traza:
 
@@ -246,8 +257,13 @@ Después generé la versión legible de la traza:
 
 - **Paso 1:** `whois_dominio(claude.ai)` (lo resolvió por RDAP), y luego intentó `whois_dominio(anthropic.com)` y `whois_dominio(atlassian.com)` → **los dos `BLOQUEADO`**. Nadie le pidió esos dominios: los dedujo él como "dominio padre" de mis hosts. Después hizo `dns_registros` de `claude.ai` con A, AAAA, MX, NS y TXT.
 - **Paso 2:** `dns_registros` A, AAAA y MX de cada host del alcance. `api.anthropic.com`, `console.anthropic.com`, `docs.anthropic.com` y `support.anthropic.com` resuelven todos a `160.79.104.10` / `2607:6bc0::10`, ninguno tiene MX, y `anthropic.atlassian.com` no tiene registro A.
-- **`api-staging.anthropic.com` salió `BLOQUEADO`** en A, AAAA y MX. Esto no debería haber pasado, porque es un host autorizado: el motivo es que al lanzar el agente todavía tenía en el `scope.txt` la exclusión `!api-staging.anthropic.com` que había puesto para la prueba del 2.3. Es un error mío de configuración, no del guard (de hecho, el guard hizo exactamente lo que ponía el fichero). Lo dejo anotado porque explica que el informe no tenga datos de ese host.
-- **Resto:** consultó TXT/CAA, `robots_txt` y `security_txt` de varios hosts, y no pudo usar Shodan porque la IP está fuera del alcance.
+- **`api-staging.anthropic.com` salió `BLOQUEADO`** en A, AAAA y MX. Esto no debería haber pasado, porque es un host autorizado: el motivo es que al lanzar el agente todavía tenía en el `scope.txt` la exclusión `!api-staging.anthropic.com` que había puesto para la prueba del 2.3 (se ve en la captura de ese apartado). Es un error mío de configuración, no del guard: el guard hizo exactamente lo que ponía el fichero. Lo dejo anotado porque explica que el informe no tenga datos de ese host.
+- **Paso 3:** CNAME de `anthropic.atlassian.com`, NS, SOA y CAA de `claude.ai`, y `subdominios_crtsh` de `claude.ai` (1 en alcance, 14 filtrados), de `anthropic.atlassian.com` (0) y de `anthropic.com` → **`BLOQUEADO`**. También `robots_txt` y `security_txt` de `claude.ai`.
+- **Paso 4:** `robots_txt` y `security_txt` del resto de hosts. `api` no tiene ninguno de los dos (404), `console` y `docs` comparten `robots.txt` con sitemaps de `platform.claude.com`, `support` publica el `security.txt` de Intercom y `anthropic.atlassian.com` no resuelve.
+- **Paso 5:** `correos_theharvester` de `claude.ai` (sin resultados) y de `anthropic.com` → **`BLOQUEADO`**; `shodan_internetdb(160.79.104.10)` → **`BLOQUEADO`**; y TXT del resto de hosts (solo `console` tiene un `google-site-verification`).
+- **Paso 6:** sin más llamadas, redacta el informe.
+
+En total, **53 llamadas a herramientas y 8 bloqueadas**. El prompt le dice "como máximo 20 llamadas", y el modelo no lo respetó: es una instrucción que el código no comprueba (el motor solo cuenta pasos y tokens), así que depende de que el modelo la cumpla.
 
 ### El informe
 
@@ -324,7 +340,7 @@ Esta vez lo presioné más, diciendo que era "imprescindible" y dándole una URL
 
 ### Conclusión de los intentos
 
-Entre las tres ejecuciones hubo 11 llamadas bloqueadas: 5 en la principal (`anthropic.com`, `atlassian.com` y tres consultas a `api-staging`), 3 en el intento 1 y 3 en el intento 2. Unas fueron porque se lo pedí y otras por iniciativa propia (los dominios padre y la IP). **Todas las veces lo paró el scope-guard antes de hacer ninguna petición**, y el modelo nunca insistió por otra herramienta. Lo importante es que no dependo de que el modelo "se porte bien": aunque hubiera insistido, la decisión la toma el código del guard, no el modelo.
+Entre las tres ejecuciones hubo 14 llamadas bloqueadas: 8 en la principal (WHOIS, crt.sh y theHarvester de `anthropic.com`, WHOIS de `atlassian.com`, tres consultas a `api-staging` y Shodan de la IP), 3 en el intento 1 y 3 en el intento 2. Unas fueron porque se lo pedí y otras por iniciativa propia (los dominios padre y la IP). **Todas las veces lo paró el scope-guard antes de hacer ninguna petición**, y el modelo nunca insistió por otra herramienta. Lo importante es que no dependo de que el modelo "se porte bien": aunque hubiera insistido, la decisión la toma el código del guard, no el modelo.
 
 ---
 
