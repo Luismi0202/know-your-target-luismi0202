@@ -1,11 +1,5 @@
 # Proyecto 1 · Know Your Target
 
-## Quién soy
-
-- **Alumno:** Luis Miguel Gomila Domínguez
-- **Centro:** IES Rafael Alberti
-- **Unidad:** UD1 · Eyes on Target
-
 ## Objetivo elegido
 
 | | |
